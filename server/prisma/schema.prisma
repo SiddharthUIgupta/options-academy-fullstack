@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String             @id @default(uuid())
+  email            String             @unique
+  password         String
+  name             String?
+  portfolios       Portfolio[]
+  tutorialProgress TutorialProgress[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Portfolio {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  balance   Float    @default(100000.0) // $100,000 paper money
+  trades    Trade[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trade {
+  id          String   @id @default(uuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  symbol      String   // Ticker symbol (e.g., TSLA)
+  optionSymbol String? // e.g., TSLA240517C00180000
+  type        String   // STOCK, CALL, PUT
+  side        String   // BUY_TO_OPEN, SELL_TO_CLOSE, SELL_TO_OPEN, BUY_TO_CLOSE
+  quantity    Int
+  price       Float
+  timestamp   DateTime @default(now())
+}
+
+model TutorialProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  moduleId    String
+  lessonId    String
+  completedAt DateTime @default(now())
+
+  @@unique([userId, moduleId, lessonId])
+}
