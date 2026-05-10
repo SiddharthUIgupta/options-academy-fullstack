@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+.env
+webapp/server/node_modules/
+webapp/server/.env
+webapp/server/prisma/dev.db
+webapp/client/node_modules/
+webapp/client/.next/
+webapp/client/.env.local
+webapp/client/.env.development.local
+webapp/client/.env.test.local
+webapp/client/.env.production.local
+*.log
+tool-outputs/
